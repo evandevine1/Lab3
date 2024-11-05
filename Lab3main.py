@@ -1,12 +1,16 @@
+states = ("Available", "Checked Out")
+
 class Book:
+
     def __init__(self, title, author, isbn, quantity):
         self.title = title
         self.author = author
         self.isbn = isbn
         self.quantity = quantity
+        self.status = states[0]
 
     def __str__(self):
-        return f"{self.title} by {self.author}, ISBN: {self.isbn}, Quantity: {self.quantity}"
+        return f"{self.title} by {self.author}, ISBN: {self.isbn}, Quantity: {self.quantity}, Status: {self.status}"
 
 
 class Library:
@@ -25,6 +29,17 @@ class Library:
                 del self.inventory[isbn]
             else:
                 self.inventory[isbn].quantity -= quantity
+
+    def check_out_book(self, isbn, quantity):
+        if isbn in self.inventory:
+            if self.inventory[isbn].quantity >= quantity:
+                self.inventory[isbn].quantity -= quantity
+                self.inventory[isbn].status = states[1]
+
+    def return_book(self, isbn, quantity):
+        if isbn in self.inventory:
+            self.inventory[isbn].quantity += quantity
+            self.inventory[isbn].status = states[0]
 
     def find_book_by_isbn(self, isbn):
         return self.inventory.get(isbn, None)
